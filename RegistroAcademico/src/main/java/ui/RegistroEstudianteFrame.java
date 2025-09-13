@@ -8,6 +8,10 @@ import com.codeup.registroacademico.domain.Estudiante;
 import Service.RegistroEstudiantesService;
 import javax.swing.JOptionPane;
 import Service.CalculoService;
+import javax.swing.JFileChooser;
+import java.io.File;
+import Service.ArchivoService;
+
 
 /**
  *
@@ -20,6 +24,7 @@ public class RegistroEstudianteFrame extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RegistroEstudianteFrame.class.getName());
     private final RegistroEstudiantesService registroService = new Service.RegistroEstudiantesService();
     private final CalculoService calculoService = new CalculoService();
+    private final ArchivoService archivoService = new ArchivoService();
 
     /**
      * Creates new form RegistroEstudianteFrame
@@ -79,6 +84,8 @@ public class RegistroEstudianteFrame extends javax.swing.JFrame {
         lblNotaMaxima = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         lblEstado = new javax.swing.JLabel();
+        btnGuardarCSV = new javax.swing.JButton();
+        btnCargarCSV = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -138,6 +145,20 @@ public class RegistroEstudianteFrame extends javax.swing.JFrame {
 
         lblEstado.setText("jLabel7");
 
+        btnGuardarCSV.setText("Guardar CSV");
+        btnGuardarCSV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGuardarCSVActionPerformed(evt);
+            }
+        });
+
+        btnCargarCSV.setText("Cargar CSV");
+        btnCargarCSV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCargarCSVActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -172,11 +193,17 @@ public class RegistroEstudianteFrame extends javax.swing.JFrame {
                             .addComponent(lblNotaMaxima)
                             .addComponent(jLabel6)
                             .addComponent(lblEstado))
-                        .addGap(65, 65, 65)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(65, 65, 65))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(btnCalcular)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 452, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(btnGuardarCSV)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCargarCSV)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -217,12 +244,19 @@ public class RegistroEstudianteFrame extends javax.swing.JFrame {
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtNota3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(9, 9, 9)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnGuardar)
-                    .addComponent(btnEstadistica)
-                    .addComponent(btnCalcular))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(9, 9, 9)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnGuardar)
+                            .addComponent(btnEstadistica)
+                            .addComponent(btnCalcular)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnGuardarCSV)
+                            .addComponent(btnCargarCSV))))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         pack();
@@ -320,6 +354,47 @@ public class RegistroEstudianteFrame extends javax.swing.JFrame {
         }// TODO add your handling code here:
     }//GEN-LAST:event_btnCalcularActionPerformed
 
+    private void btnGuardarCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarCSVActionPerformed
+        if(registroService.listarEstudiantes().isEmpty()){
+            JOptionPane.showMessageDialog(this, "No hay estudiantes que guardar");
+            return;
+        }
+        JFileChooser fileChooser = new JFileChooser();
+        int option = fileChooser.showSaveDialog(this);
+        if (option == JFileChooser.APPROVE_OPTION){
+            File archivo = fileChooser.getSelectedFile();
+            try{
+                archivoService.guardarCSV(archivo, registroService.listarEstudiantes());
+                JOptionPane.showMessageDialog(this, "Archivo guardado");
+            } catch (Exception ex){
+                JOptionPane.showMessageDialog(this, "Error al guardar" + ex.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGuardarCSVActionPerformed
+
+    private void btnCargarCSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCargarCSVActionPerformed
+        JFileChooser fileChooser = new JFileChooser();
+        int option = fileChooser.showOpenDialog(this);
+        if (option == JFileChooser.APPROVE_OPTION){
+            File archivo = fileChooser.getSelectedFile();
+            try{
+                var lista = archivoService.cargarCSV(archivo);
+                registroService.listarEstudiantes().clear();
+                for (var e : lista){
+                    registroService.agregarEstudiantes(e);
+                }
+                actualizarTabla();
+                JOptionPane.showMessageDialog(this, "Datos cargados correctamente");
+            } catch (Exception ex){
+                JOptionPane.showMessageDialog(this, "Error al cargar el archivo:" + ex.getMessage(),
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnCargarCSVActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -347,8 +422,10 @@ public class RegistroEstudianteFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCalcular;
+    private javax.swing.JButton btnCargarCSV;
     private javax.swing.JButton btnEstadistica;
     private javax.swing.JButton btnGuardar;
+    private javax.swing.JButton btnGuardarCSV;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

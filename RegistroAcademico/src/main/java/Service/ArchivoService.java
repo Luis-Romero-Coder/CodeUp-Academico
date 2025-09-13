@@ -26,7 +26,7 @@ public class ArchivoService {
         List<Estudiante> lista = new ArrayList<>();
         try(BufferedReader br = new BufferedReader(new FileReader(archivo))){
             String linea;
-            while  ((liena = br.readLine()) != null){
+            while  ((linea = br.readLine()) != null){
                 String[] partes = linea.split(",");
                 if (partes.length != 6){
                     throw new IOException ("Formato invalido: cada fila debe tener 6 columnas");
