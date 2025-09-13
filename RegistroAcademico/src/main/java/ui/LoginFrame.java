@@ -6,6 +6,7 @@ package ui;
 
 import Service.UsuarioService;
 import java.util.Arrays;
+
 /**
  *
  * @author Coder
@@ -39,10 +40,6 @@ public class LoginFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        txtUsuario.setText("jTextField1");
-
-        txtPassword.setText("jPasswordField1");
-
         btnIngresar.setText("Ingresar");
         btnIngresar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -55,7 +52,7 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel2.setText("Contraseña");
 
         lblMensaje.setForeground(new java.awt.Color(255, 51, 51));
-        lblMensaje.setText("jLabel3");
+        lblMensaje.setText("   ");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -65,16 +62,16 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(132, 132, 132)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnIngresar)
-                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2)))
+                            .addComponent(jLabel2)
+                            .addComponent(txtUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                            .addComponent(txtPassword)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(150, 150, 150)
+                        .addGap(147, 147, 147)
                         .addComponent(lblMensaje)))
-                .addContainerGap(178, Short.MAX_VALUE))
+                .addContainerGap(168, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -89,16 +86,34 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnIngresar)
-                .addGap(36, 36, 36)
+                .addGap(26, 26, 26)
                 .addComponent(lblMensaje)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
-        String user = 
+        String user = txtUsuario.getText().trim();
+        char[] pass = txtPassword.getPassword();
+        
+        if (user.isBlank() || pass.length == 0){
+            lblMensaje.setText("Usuario y contraseña obligatorio");
+            return;
+        }
+        
+        boolean ok = usuarioService.autenticar(user, pass);
+        java.util.Arrays.fill(pass, '\0');
+        
+        if (ok){
+            var frame = new RegistroEstudianteFrame();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+            this.dispose();
+        }else{
+            lblMensaje.setText("Credenciales invalidas.");
+        }
         // TODO add your handling code here:
     }//GEN-LAST:event_btnIngresarActionPerformed
 
