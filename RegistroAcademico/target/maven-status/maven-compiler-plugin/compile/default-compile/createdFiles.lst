@@ -1,0 +1,15 @@
+com\codeup\registroacademico\RegistroAcademico.class
+Service\CalculoService.class
+ui\RegistroEstudianteFrame$4.class
+ui\RegistroEstudianteFrame$2.class
+com\codeup\registroacademico\domain\Estudiante.class
+ui\RegistroEstudianteFrame$3.class
+ui\RegistroEstudianteFrame.class
+Service\UsuarioService.class
+ui\LoginFrame$1.class
+ui\LoginFrame.class
+Service\RegistroEstudiantesService.class
+ui\RegistroEstudianteFrame$5.class
+Service\ArchivoService.class
+com\codeup\registroacademico\domain\Nota.class
+ui\RegistroEstudianteFrame$1.class
